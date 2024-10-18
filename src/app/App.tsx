@@ -65,8 +65,8 @@ export function App() {
             <DeckGL
                 initialViewState={
                     {
-                        longitude: 139.0192649,
-                        latitude: 36.486692,
+                        longitude: 138.78411566925945,
+                        latitude: 36.208290700835676,
                         zoom: 16
                     }
                 }
@@ -91,7 +91,7 @@ function ll2pixel(long: number, lat: number, zoom: number): { x: number, y: numb
     const x = Math.pow(2, zoom + 7) * (long_rad / Math.PI + 1);
     const y = (Math.pow(2, zoom + 7) / Math.PI) * (-Math.atanh(Math.sin(lat_rad)) + Math.atanh(Math.sin(L * Math.PI / 180)));
 
-    return {x, y};
+    return {x: Math.floor(x), y: Math.floor(y)};
 }
 
 type FeatureProperties = {
@@ -116,6 +116,7 @@ async function fetchNodeData(index: TileIndex): Promise<NodeData[]> {
                 const pixel = ll2pixel(long, lat, 18);
                 // ZoomLv(18) , TileSize(256=2^8) , HilbertOrder(26)
                 const hilbert = pointToIndex({x: pixel.x, y: pixel.y}, 26);
+                console.log(long, lat, pixel, hilbert);
 
                 return {type, rivCtg, hilbert, coordinates: [long, lat]};
             })
